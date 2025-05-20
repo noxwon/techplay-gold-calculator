@@ -1,0 +1,27 @@
+.gold-calculator-admin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.gold-calculator-admin-container h2 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+#latest-rates {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.gold-rate-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.gold-rate-item:last-child {
+    border-bottom: none;
+}

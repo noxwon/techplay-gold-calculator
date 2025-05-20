@@ -1,0 +1,491 @@
+.gold-calculator {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.goldbar-svg, #goldbar-svg {
+    display: flex;
+    margin: 0 auto 10px auto;
+    text-align: center;
+    justify-content: center;
+}
+.result-meta {
+    margin-top: 8px;
+    font-size: 1em;
+    color: #666;
+    text-align: center;
+}
+.gold-calculator h2 {
+    color: #333;
+    margin-bottom: 20px !important;
+    text-align: center;
+}
+
+.calculator-row {
+    margin-bottom: 15px;
+}
+
+.inline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.inline-row label,
+.inline-row select,
+.inline-row .weight-input-group {
+    margin-bottom: 0;
+}
+
+.inline-label {
+    margin-left: 20px;
+    margin-right: 5px;
+}
+
+.gold-info-tile {
+    background: #fffbe6;
+    border: 1px solid #ffe066;
+    border-radius: 8px;
+    padding: 10px 18px;
+    margin-bottom: 8px;
+    font-size: 1.09em;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 0;
+    word-break: keep-all;
+}
+
+.gold-info-tile .gold-diff {
+    font-weight: bold;
+    margin-left: 4px;
+    font-size: 1.05em;
+    align-self: center;
+    min-width: 90px;
+    white-space: nowrap;
+    overflow-x: auto;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.gold-info-tile .arrow-up {
+    color: #e74c3c;
+    font-size: 1.2em;
+    margin-right: 4px;
+}
+.gold-info-tile .arrow-down {
+    color: #0073aa;
+    font-size: 1.2em;
+    margin-right: 4px;
+}
+.gold-info-tile .gold-date {
+    color: #888;
+    font-size: 0.69em;
+    align-self: center;
+}
+.gold-info-tile .gold-price {
+    font-weight: bold;
+    color: #222;
+    font-size: 1.08em;
+    align-self: center;
+}
+.gold-info-tile .gold-diff {
+    font-weight: bold;
+    margin-left: 4px;
+    font-size: 1.05em;
+    align-self: center;
+}
+
+.calculator-row label {
+    display: block;
+    color: #555;
+}
+
+.weight-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.weight-input-group select,
+.weight-input-group input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.calculate-button {
+    width: 100%;
+    padding: 10px;
+    background: #0073aa;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.calculate-button:hover {
+    background: #005177;
+}
+
+.result-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+#result {
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.price-chart-container {
+    margin-top: 30px;
+}
+
+.price-chart-container h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#gold-info-tile-toggle {
+    margin-bottom: 10px;
+    display: none;
+    background: #fffbe6;
+    border: 1px solid #ffe066;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1.09em;
+    font-weight: bold;
+    color: #bfa100;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s, color 0.2s;
+    box-shadow: 0 2px 8px rgba(255, 224, 102, 0.08);
+}
+#gold-info-tile-toggle:hover {
+    background: #ffe066;
+    color: #222;
+    border-color: #ffd700;
+}
+
+/* === Gold Calculator Modern Grid UI === */
+.gold-calc-container {
+    max-width: 350px;
+    margin: 40px auto;
+    padding: 24px 18px 18px 18px;
+    border-radius: 24px;
+    background: var(--gold-calc-bg, #fff);
+    box-shadow: 0 6px 24px 0 rgba(0,0,0,0.09);
+    transition: background 0.3s;
+}
+.gold-calc-title {
+    font-family: 'Georgia', serif;
+    font-size: 2.2em;
+    text-align: center;
+    margin-bottom: 1.2em;
+    color: var(--gold-calc-title, #222);
+}
+.gold-calc-main-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.gold-calc-display {
+    background: var(--gold-calc-display-bg, #fffbe6);
+    border-radius: 18px;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 22px 18px 8px 18px; /* Increased top padding to prevent SVG clipping */
+    position: relative;
+    box-shadow: 0 2px 8px rgba(255, 224, 102, 0.08);
+}
+#gold-calc-display-value {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--gold-calc-display-text, #222);
+    margin-top: 12px;
+    margin-bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+.gold-calc-theme-toggle {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+}
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 56px; /* Increased width */
+    height: 30px; /* Increased height */
+}
+.theme-switch input {display:none;}
+.theme-switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #eee;
+    border: 1px solid #ccc; 
+    border-radius: 30px; /* Adjusted for new height */
+    transition: 0.3s;
+}
+.theme-switch input:checked + .slider {
+    background-color: var(--gold-calc-btn-active-bg, #ffe066); /* Using theme color for dark mode track */
+    border-color: var(--gold-calc-btn-active, #bfa100);
+}
+.theme-switch .slider:before {
+    position: absolute;
+    content: '';
+    height: 24px; /* Increased knob size */
+    width: 24px; /* Increased knob size */
+    left: 3px; /* Adjusted for new knob size */
+    bottom: 3px; /* Adjusted for new knob size */
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.theme-switch input:checked + .slider:before {
+    transform: translateX(26px); /* Adjusted for new sizes */
+    background-color: var(--gold-calc-btn-active, #23242b); /* Using theme color for dark mode knob for contrast */
+}
+
+.gold-calc-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 0;
+}
+.gold-calc-karat-row .karat-btn,
+.gold-calc-unit-row .unit-btn {
+    flex: 1;
+    padding: 0.7em 0.2em;
+    font-size: 1.1em;
+    border-radius: 12px;
+    border: none;
+    background: var(--gold-calc-btn-bg, #f6f8ff);
+    color: var(--gold-calc-btn, #3d3d3d);
+    font-weight: 500;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.karat-btn.active,
+.unit-btn.active {
+    background: var(--gold-calc-btn-active-bg, #ffe066);
+    color: var(--gold-calc-btn-active, #bfa100);
+    font-weight: 700;
+}
+.gold-calc-keypad-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+.keypad-btn {
+    font-size: 1.3em;
+    padding: 0.7em 0;
+    border: none;
+    border-radius: 10px;
+    background: var(--gold-calc-keypad-bg, #f7f8fa);
+    color: var(--gold-calc-keypad, #222);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+}
+.keypad-btn:active,
+.keypad-btn.gold-calc-ac:active,
+.keypad-btn.gold-calc-equal:active {
+    background: #ffe066;
+    color: #bfa100;
+}
+.keypad-btn.gold-calc-ac,
+.keypad-btn.gold-calc-backspace {
+    background: #f6f8ff;
+    color: #bfa100;
+    font-weight: bold;
+}
+.keypad-btn.gold-calc-equal {
+    grid-row: span 2;
+    background: #fffbe6;
+    color: #bfa100;
+    font-weight: bold;
+}
+.keypad-btn.gold-calc-zero {
+    grid-column: span 2;
+}
+
+:root {
+    --gold-calc-bg: #fff;
+    --gold-calc-title: #222;
+    --gold-calc-display-bg: #fffbe6;
+    --gold-calc-display-text: #222;
+    --gold-calc-btn-bg: #f6f8ff;
+    --gold-calc-btn: #3d3d3d;
+    --gold-calc-btn-active-bg: #ffe066;
+    --gold-calc-btn-active: #bfa100;
+    --gold-calc-keypad-bg: #f7f8fa;
+    --gold-calc-keypad: #222;
+    --gold-calc-subtext: #888;
+}
+.gold-calc-dark, .gold-calc-dark body {
+    --gold-calc-bg: #181920;
+    --gold-calc-title: #ffe066;
+    --gold-calc-display-bg: #23242b;
+    --gold-calc-display-text: #ffe066;
+    --gold-calc-btn-bg: #23242b;
+    --gold-calc-btn: #ffe066;
+    --gold-calc-btn-active-bg: #ffe066;
+    --gold-calc-btn-active: #23242b;
+    --gold-calc-keypad-bg: #23242b;
+    --gold-calc-keypad: #ffe066;
+    --gold-calc-subtext: #ffe066bb;
+    background: #181920;
+    color: #ffe066;
+}
+.gold-calc-dark .gold-calc-container {
+    box-shadow: 0 6px 24px 0 rgba(0,0,0,0.29);
+}
+.gold-calc-dark .keypad-btn.gold-calc-ac,
+.gold-calc-dark .keypad-btn.gold-calc-backspace {
+    background-color: #2f303a; /* Slightly lighter than default dark keypad bg */
+    color: #d4b350; /* Slightly toned down from bright gold */
+}
+@media (max-width: 480px) {
+    .gold-calc-container {
+        padding: 10px 2vw;
+        max-width: 98vw;
+    }
+    .gold-calc-title {
+        font-size: 1.3em;
+    }
+    .gold-calc-display {
+        min-height: 120px;
+        padding: 10px 6px 4px 6px;
+    }
+    .gold-calc-row {
+        gap: 4px;
+    }
+    .gold-calc-keypad-row {
+        gap: 4px;
+    }
+    .karat-btn, .unit-btn, .keypad-btn {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .gold-info-tile{
+        padding: 9px 8px;
+    }
+    .gold-calculator {
+        padding: 15px;
+    }
+    .inline-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+    .inline-row label,
+    .inline-row select,
+    .inline-row .weight-input-group {
+        margin-bottom: 8px;
+    }
+    .weight-input-group {
+        flex-direction: column;
+    }
+    .weight-input-group select,
+    .weight-input-group input {
+        width: 100%;
+    }
+    .gold-info-tile {
+        gap: 5px;
+        align-items: flex-start;
+    }
+    .gold-info-tile .gold-price{
+        font-size: 0.78em;
+    }
+    .gold-info-tile .gold-diff {
+        font-size: 0.65em;
+    }
+    #gold-info-tile-toggle:hover {
+        width: 100%;
+    }
+    #gold-info-tile-toggle {
+        font-size: 0.89em;
+        width: 100%;
+    }
+    .gold-info-tile .gold-date {
+        font-size: 0.569em;
+    }
+    .inline-label {
+        margin-left: unset;
+        margin-right: unset;
+    }
+    .calculator-row label {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 380px) {
+    .calculator-row label {
+        font-size: 0.8em;
+    }
+}
+
+
+.gold-calc-dark .keypad-btn.gold-calc-equal {
+    background-color: #3a362a; /* A deeper gold-ish dark background */
+    color: #ffe066; /* Keep text color prominent */
+}
+
+/* Gold Circle Sparkle Animation */
+.gold-circle-shape {
+    animation: sparkle 2.5s infinite ease-in-out, floatUpDown 3s infinite alternate ease-in-out;
+    transform-origin: center center; /* Ensures scaling or transforms originate from the center */
+    transition: rx 0.3s ease-out, ry 0.3s ease-out, cx 0.3s ease-out, cy 0.3s ease-out;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.85;
+        /* Optional: slightly scale up to give a 'gleam' effect */
+        /* transform: scale(1.03); */
+    }
+}
+
+@keyframes floatUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px); /* Adjust for subtle movement */
+  }
+}
+
+/* Visual feedback for keyboard-triggered button presses */
+.keypad-btn.key-pressed {
+    transform: scale(0.95);
+    opacity: 0.8;
+    transition: transform 0.05s ease-in-out, opacity 0.05s ease-in-out;
+}
