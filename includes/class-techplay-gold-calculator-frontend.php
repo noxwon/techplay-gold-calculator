@@ -87,17 +87,17 @@ class Techplay_Gold_Calculator_Frontend {
                     <div id="gold-calc-weight-info" style="font-size: 0.9em; color: #555;"></div>
                 </div>
                 <div class="gold-calc-row gold-calc-karat-row">
-                    <button type="button" class="karat-btn" data-karat="14">14K</button>
-                    <button type="button" class="karat-btn" data-karat="18">18K</button>
-                    <button type="button" class="karat-btn" data-karat="21">21K</button>
-                    <button type="button" class="karat-btn" data-karat="22">22K</button>
-                    <button type="button" class="karat-btn active" data-karat="24">24K</button>
+                    <button type="button" class="karat-btn <?php echo ($atts['default_karat'] == '14' ? 'active' : ''); ?>" data-karat="14">14K</button>
+                    <button type="button" class="karat-btn <?php echo ($atts['default_karat'] == '18' ? 'active' : ''); ?>" data-karat="18">18K</button>
+                    <button type="button" class="karat-btn <?php echo ($atts['default_karat'] == '21' ? 'active' : ''); ?>" data-karat="21">21K</button>
+                    <button type="button" class="karat-btn <?php echo ($atts['default_karat'] == '22' ? 'active' : ''); ?>" data-karat="22">22K</button>
+                    <button type="button" class="karat-btn <?php echo ($atts['default_karat'] == '24' ? 'active' : ''); ?>" data-karat="24">24K</button>
                 </div>
                 <div class="gold-calc-row gold-calc-unit-row">
-                    <button type="button" class="unit-btn active" data-unit="g">그램</button>
-                    <button type="button" class="unit-btn" data-unit="oz">온스</button>
-                    <button type="button" class="unit-btn" data-unit="don">돈</button>
-                    <button type="button" class="unit-btn" data-unit="tael">냥</button>
+                    <button type="button" class="unit-btn <?php echo ($atts['default_unit'] == 'g' ? 'active' : ''); ?>" data-unit="g">그램</button>
+                    <button type="button" class="unit-btn <?php echo ($atts['default_unit'] == 'oz' ? 'active' : ''); ?>" data-unit="oz">온스</button>
+                    <button type="button" class="unit-btn <?php echo ($atts['default_unit'] == 'don' ? 'active' : ''); ?>" data-unit="don">돈</button>
+                    <button type="button" class="unit-btn <?php echo ($atts['default_unit'] == 'tael' ? 'active' : ''); ?>" data-unit="tael">냥</button>
                 </div>
                 <div class="gold-calc-row gold-calc-keypad-row">
                     <button type="button" class="keypad-btn" data-value="7">7</button>

@@ -324,8 +324,17 @@ function renderPriceDiffBlock() {
     const $container = $('.gold-calc-container');
     if ($container.length === 0) return; // Modern UI는 해당 컨테이너가 있을 때만 활성화
     let input = '';
-    let selectedKarat = '24'; // 기본값
-    let selectedUnit = 'g';   // 기본값
+    let $activeKaratButton = $container.find('.karat-btn.active');
+    let selectedKarat = $activeKaratButton.length ? $activeKaratButton.data('karat').toString() : '24';
+    if (!$activeKaratButton.length) {
+        $container.find('.karat-btn[data-karat="24"]').addClass('active');
+    }
+
+    let $activeUnitButton = $container.find('.unit-btn.active');
+    let selectedUnit = $activeUnitButton.length ? $activeUnitButton.data('unit').toString() : 'g';
+    if (!$activeUnitButton.length) {
+        $container.find('.unit-btn[data-unit="g"]').addClass('active');
+    }
 
     // State for handling unit conversions after calculation
     let lastCalculatedKarat = null;
