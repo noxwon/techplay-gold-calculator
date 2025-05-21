@@ -194,71 +194,194 @@ class Techplay_Gold_Calculator_API {
      * Return price detail info for display tile (always 24K 기준)
      * @return array|null
      */
-    public function get_gold_price_detail($karat) {
+    public function get_gold_price_detail($karat) { // $karat is received but not strictly used to vary the API call for karat other than 24.
+        
         try {
             // Always use 24K for detail tile
             $cache_key = 'gold_price_detail_24';
             $cache_file = $this->cache_dir . '/' . $cache_key . '.json';
-            $is_cache = $this->is_cache_valid($cache_file);
-            $xml = null;
+            
+
+            $is_cache_valid = $this->is_cache_valid($cache_file);
+            
+
             $body = '';
-            if ($is_cache) {
-                $cache_data = json_decode(file_get_contents($cache_file), true);
-                if ($cache_data && isset($cache_data['xml'])) {
-                    $body = $cache_data['xml'];
-                    $xml = simplexml_load_string($body);
+            $source_type = ''; // To log whether we got data from cache (json/xml) or new API call
+
+            if ($is_cache_valid) {
+                
+                $cache_content_raw = file_get_contents($cache_file);
+                if ($cache_content_raw === false) {
+                    
+                    $is_cache_valid = false; // Treat as cache miss if read fails
+                } else {
+                    $cache_data = json_decode($cache_content_raw, true);
+                    if ($cache_data && isset($cache_data['timestamp'])) {
+                        if (isset($cache_data['json_body'])) {
+                            $body = $cache_data['json_body'];
+                            $source_type = 'json_cache';
+                            
+                        } elseif (isset($cache_data['xml_body'])) {
+                            $body = $cache_data['xml_body'];
+                            $source_type = 'xml_cache';
+                            
+                        } else {
+                            
+                            $is_cache_valid = false; // Cache format is unexpected
+                        }
+                    } else {
+                        
+                        $is_cache_valid = false; // Cache data is corrupted or old format
+                    }
                 }
             }
-            if (!$xml) {
-                $url = $this->build_api_url(24); // 24K only
-                $response = wp_remote_get($url);
-                $body = wp_remote_retrieve_body($response);
 
-                // JSON인지 XML인지 판별
-                $json = json_decode($body, true);
-                if ($json !== null && isset($json['response']['body']['items']['item'])) {
-                    $item = $json['response']['body']['items']['item'];
-                    // item이 배열(여러 건)일 경우 '금 99.99_1Kg'만 추출
-                    if (isset($item[0])) {
-                        $found = false;
-                        foreach ($item as $candidate) {
-                            if (isset($candidate['itmsNm']) && strpos($candidate['itmsNm'], '금 99.99_1Kg') !== false) {
-                                $item = $candidate;
-                                $found = true;
-                                break;
-                            }
-                        }
-                        if (!$found) {
-                            // 못 찾으면 첫 번째 사용
-                            $item = $item[0];
+            if (!$is_cache_valid || empty($body)) {
+                
+                $url = $this->build_api_url(24); // 24K only
+                
+                
+                $response = wp_remote_get($url, ['timeout' => 15]); // Added timeout
+
+                if (is_wp_error($response)) {
+                    
+                    throw new Exception("API request failed: " . $response->get_error_message());
+                }
+
+                $response_code = wp_remote_retrieve_response_code($response);
+                
+
+                if ($response_code != 200) {
+                    
+                    throw new Exception("API request failed with HTTP status: " . $response_code);
+                }
+                
+                $body = wp_remote_retrieve_body($response);
+                $source_type = 'api';
+                 // Log first 500 chars
+                
+                if (empty($body)) {
+                    
+                    return null;
+                }
+            }
+
+            // Try parsing as JSON first
+            
+            $json = json_decode($body, true);
+
+            if ($json !== null && isset($json['response']['header']['resultCode']) && $json['response']['header']['resultCode'] === '00' && isset($json['response']['body']['items']['item'])) {
+                
+                $items = $json['response']['body']['items']['item'];
+                $item_to_use = null;
+
+                if (isset($items[0]) && is_array($items[0])) { // Check if $items is an array of items
+                    
+                    $found_specific = false;
+                    foreach ($items as $candidate) {
+                        if (isset($candidate['itmsNm']) && strpos($candidate['itmsNm'], '금 99.99_1Kg') !== false) {
+                            $item_to_use = $candidate;
+                            $found_specific = true;
+                            
+                            break;
                         }
                     }
-                    file_put_contents($cache_file, json_encode(['json'=>$body,'timestamp'=>time()]));
+                    if (!$found_specific && !empty($items)) {
+                        $item_to_use = $items[0]; // Use the first item if specific one not found
+                        
+                    }
+                } elseif (is_array($items) && isset($items['itmsNm'])) { // Single item returned directly
+                     
+                    $item_to_use = $items;
+                }
+
+                if ($item_to_use && isset($item_to_use['clpr'])) {
+                    
+                    if ($source_type === 'api') { // Only cache if fetched from API
+                        file_put_contents($cache_file, json_encode(['json_body' => $body, 'timestamp' => time()]));
+                        
+                    }
                     return array(
-                        'basDt' => isset($item['basDt']) ? $item['basDt'] : '',
-                        'clpr'  => isset($item['clpr']) ? (float)$item['clpr'] : 0,
-                        'vs'    => isset($item['vs']) ? (float)$item['vs'] : 0,
-                        'fltRt' => isset($item['fltRt']) ? (float)$item['fltRt'] : 0,
-                        'itmsNm'=> isset($item['itmsNm']) ? $item['itmsNm'] : '',
+                        'basDt' => isset($item_to_use['basDt']) ? $item_to_use['basDt'] : '',
+                        'clpr'  => isset($item_to_use['clpr']) ? (float)$item_to_use['clpr'] : 0,
+                        'vs'    => isset($item_to_use['vs']) ? (string)$item_to_use['vs'] : '0', // API sends as string
+                        'fltRt' => isset($item_to_use['fltRt']) ? (string)$item_to_use['fltRt'] : '0', // API sends as string
+                        'itmsNm'=> isset($item_to_use['itmsNm']) ? $item_to_use['itmsNm'] : '',
                     );
                 } else {
-                    // XML fallback
-                    $xml = simplexml_load_string($body);
-                    file_put_contents($cache_file, json_encode(['xml'=>$body,'timestamp'=>time()]));
+                    
+                    // if ($item_to_use) error_log('[Gold Calculator DEBUG get_gold_price_detail] item_to_use dump: ' . print_r($item_to_use, true));
+
+                }
+            } else {
+                 
+                 // if ($json === null) error_log('[Gold Calculator DEBUG get_gold_price_detail] json_decode returned null. Error: ' . json_last_error_msg());
+            }
+
+            // Fallback to XML if JSON parsing failed or didn't yield data
+            
+            // Prevent XML errors from breaking the page
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_string($body);
+            libxml_clear_errors();
+
+            if ($xml !== false && isset($xml->header->resultCode) && (string)$xml->header->resultCode === '00' && isset($xml->body->items->item)) {
+                
+                $items_xml = $xml->body->items->item;
+                $item_to_use_xml = null;
+
+                if (count($items_xml) > 1) { // Multiple items
+                    
+                    $found_specific_xml = false;
+                    foreach ($items_xml as $candidate_xml) {
+                        if (isset($candidate_xml->itmsNm) && strpos((string)$candidate_xml->itmsNm, '금 99.99_1Kg') !== false) {
+                            $item_to_use_xml = $candidate_xml;
+                            $found_specific_xml = true;
+                            
+                            break;
+                        }
+                    }
+                    if (!$found_specific_xml && count($items_xml) > 0) {
+                        $item_to_use_xml = $items_xml[0]; // Use the first item
+                        
+                    }
+                } elseif (count($items_xml) === 1) { // Single item
+                    
+                    $item_to_use_xml = $items_xml;
+                }
+                
+                if ($item_to_use_xml && isset($item_to_use_xml->clpr)) {
+                    
+                     if ($source_type === 'api') { // Only cache if fetched from API
+                        file_put_contents($cache_file, json_encode(['xml_body' => $body, 'timestamp' => time()]));
+                        
+                    }
+                    return array(
+                        'basDt' => isset($item_to_use_xml->basDt) ? (string)$item_to_use_xml->basDt : '',
+                        'clpr'  => isset($item_to_use_xml->clpr) ? (float)$item_to_use_xml->clpr : 0,
+                        'vs'    => isset($item_to_use_xml->vs) ? (string)$item_to_use_xml->vs : '0',
+                        'fltRt' => isset($item_to_use_xml->fltRt) ? (string)$item_to_use_xml->fltRt : '0',
+                        'itmsNm'=> isset($item_to_use_xml->itmsNm) ? (string)$item_to_use_xml->itmsNm : '',
+                    );
+                } else {
+                     
+                }
+            } else {
+                
+                if ($xml === false) {
+                    $xml_errors = libxml_get_errors();
+                    foreach ($xml_errors as $error) {
+                        
+                    }
+                    libxml_clear_errors();
                 }
             }
-            if (!$xml || !isset($xml->body->items->item)) {
-                return null;
-            }
-            $item = $xml->body->items->item;
-            return array(
-                'basDt' => (string)$item->basDt,
-                'clpr' => (float)$item->clpr,
-                'vs' => (float)$item->vs,
-                'fltRt' => (float)$item->fltRt,
-                'itmsNm' => (string)$item->itmsNm,
-            );
+
+            
+            return null; // If all parsing fails or no suitable item found
+
         } catch (Exception $e) {
+            
             return null;
         }
     }
