@@ -64,16 +64,24 @@ class Techplay_Gold_Calculator_Loader {
     }
     
     public function load_resources() {
-        global $post;
-        
-        if (!is_a($post, 'WP_Post')) {
-            return;
+        // Only proceed if it's a singular page (post, page, or custom post type).
+        if (is_singular()) {
+            // Get the main post object for the current query.
+            // On singular pages, get_queried_object() returns the post object.
+            $current_post = get_queried_object();
+
+            if ($current_post instanceof WP_Post && property_exists($current_post, 'post_content')) {
+                // techplay_gold_calculator_check_shortcode is globally defined in this file
+                // and wraps WordPress's has_shortcode().
+                if (techplay_gold_calculator_check_shortcode($current_post->post_content)) {
+                    add_action('wp_enqueue_scripts', array($this->frontend, 'enqueue_frontend_scripts'));
+                    // Register the shortcode handler as well, only when it's likely to be used.
+                    add_shortcode('gold_calculator', array($this->frontend, 'render_calculator'));
+                }
+            }
         }
-        
-        if (techplay_gold_calculator_check_shortcode($post->post_content)) {
-            add_action('wp_enqueue_scripts', array($this->frontend, 'enqueue_frontend_scripts'));
-            add_shortcode('gold_calculator', array($this->frontend, 'render_calculator'));
-        }
+        // If not is_singular(), or if the shortcode is not found in the main queried post's content,
+        // then enqueue_frontend_scripts will not be hooked by this loader.
     }
     
     public function render_calculator($atts) {

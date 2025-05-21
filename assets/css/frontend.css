@@ -71,6 +71,7 @@
     overflow-x: auto;
     text-overflow: ellipsis;
     max-width: 100%;
+    color: var(--gold-calc-display-text);
 }
 .gold-info-tile .arrow-up {
     color: #e74c3c;
@@ -213,6 +214,9 @@
     padding: 22px 18px 8px 18px; /* Increased top padding to prevent SVG clipping */
     position: relative;
     box-shadow: 0 2px 8px rgba(255, 224, 102, 0.08);
+}
+.gold-calc-container #gold-calc-monetary-value{
+    color: var(--gold-calc-display-text);
 }
 #gold-calc-display-value {
     font-size: 2em;
@@ -375,6 +379,7 @@
     }
     .gold-calc-title {
         font-size: 1.3em;
+        margin-bottom: 2em;
     }
     .gold-calc-display {
         min-height: 120px;

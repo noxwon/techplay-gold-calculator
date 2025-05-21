@@ -26,12 +26,9 @@ class Techplay_Gold_Calculator_API {
             $this->api_key = str_replace('+', '%2B', $this->api_key);
         }
         
-        // Save the encoded API key back to options
-        update_option('techplay_gold_calculator_settings', array(
-            'api_key' => $this->api_key,
-            'cache_time' => $options['cache_time'] ?? 30
-        ));
-        
+        // $this->api_key is already set and potentially re-encoded above.
+        // The cache_time is read from options.
+        // There's no need to re-save the option here. Settings are saved by the Admin class.
         $this->cache_time = $options['cache_time'] ?? 30;
         
         $this->cache_dir = wp_upload_dir()['basedir'] . '/techplay-gold-calculator-cache';
