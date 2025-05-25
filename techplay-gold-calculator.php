@@ -60,33 +60,28 @@ class Techplay_Gold_Calculator_Loader {
     }
     
     public function run() {
+        // Register the shortcode handler early. 'plugins_loaded' (where this->run() is effectively called from) is fine.
+        add_shortcode('gold_calculator', array($this->frontend, 'render_calculator'));
+
+        // Hook 'load_resources' to 'wp' to conditionally enqueue scripts.
         add_action('wp', array($this, 'load_resources'));
     }
     
     public function load_resources() {
         // Only proceed if it's a singular page (post, page, or custom post type).
         if (is_singular()) {
-            // Get the main post object for the current query.
-            // On singular pages, get_queried_object() returns the post object.
             $current_post = get_queried_object();
 
             if ($current_post instanceof WP_Post && property_exists($current_post, 'post_content')) {
-                // techplay_gold_calculator_check_shortcode is globally defined in this file
-                // and wraps WordPress's has_shortcode().
-                if (techplay_gold_calculator_check_shortcode($current_post->post_content)) {
+                // Use WordPress's has_shortcode() directly or the existing wrapper.
+                if (has_shortcode($current_post->post_content, 'gold_calculator')) {
+                    // If the shortcode is found in the content, then hook the script enqueueing function.
                     add_action('wp_enqueue_scripts', array($this->frontend, 'enqueue_frontend_scripts'));
-                    // Register the shortcode handler as well, only when it's likely to be used.
-                    add_shortcode('gold_calculator', array($this->frontend, 'render_calculator'));
                 }
             }
         }
-        // If not is_singular(), or if the shortcode is not found in the main queried post's content,
-        // then enqueue_frontend_scripts will not be hooked by this loader.
     }
-    
-    public function render_calculator($atts) {
-        return $this->frontend->render_calculator($atts);
-    }
+
 }
 
 

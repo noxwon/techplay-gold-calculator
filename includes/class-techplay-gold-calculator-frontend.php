@@ -45,12 +45,14 @@ class Techplay_Gold_Calculator_Frontend {
             true
         );
         
+        $nonce_value = wp_create_nonce('gold_calculator_nonce');
+        error_log('Generated Nonce (frontend.js): ' . $nonce_value);
         wp_localize_script(
             'techplay-gold-calculator',
             'goldCalculator',
             array(
                 'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('gold_calculator_nonce')
+                'nonce' => $nonce_value
             )
         );
     }

@@ -44,8 +44,8 @@ class Techplay_Gold_Calculator {
     
     private function define_frontend_hooks() {
         $this->frontend = Techplay_Gold_Calculator_Frontend::get_instance();
-        add_action('wp_enqueue_scripts', array($this->frontend, 'enqueue_frontend_scripts'));
-        add_shortcode('gold_calculator', array($this->frontend, 'render_calculator'));
+        // add_action('wp_enqueue_scripts', array($this->frontend, 'enqueue_frontend_scripts')); // Handled by Techplay_Gold_Calculator_Loader
+        // add_shortcode('gold_calculator', array($this->frontend, 'render_calculator')); // Handled by Techplay_Gold_Calculator_Loader
     }
     
     public static function activate() {

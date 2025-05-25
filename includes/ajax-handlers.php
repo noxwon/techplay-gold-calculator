@@ -111,6 +111,12 @@ add_action('wp_ajax_get_price_history', 'techplay_get_price_history');
 add_action('wp_ajax_nopriv_get_price_history', 'techplay_get_price_history');
 
 function techplay_get_price_history() {
+    if (isset($_REQUEST['nonce'])) {
+        error_log('Received Nonce (AJAX handler): ' . sanitize_text_field($_REQUEST['nonce']));
+    } else {
+        error_log('Nonce not received in AJAX handler request.');
+    }
+    // Verify nonce
     check_ajax_referer('gold_calculator_nonce', 'nonce');
     $db = Techplay_Gold_Calculator_DB::get_instance();
     global $wpdb;
