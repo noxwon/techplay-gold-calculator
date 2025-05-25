@@ -72,8 +72,8 @@ class Techplay_Gold_Calculator {
         $this->db = Techplay_Gold_Calculator_DB::get_instance();
         
         // Add AJAX handlers
-        add_action('wp_ajax_get_price_history', array($this, 'get_price_history'));
-        add_action('wp_ajax_nopriv_get_price_history', array($this, 'get_price_history'));
+        // add_action('wp_ajax_get_price_history', array($this, 'get_price_history')); // Handled by ajax-handlers.php
+        // add_action('wp_ajax_nopriv_get_price_history', array($this, 'get_price_history')); // Handled by ajax-handlers.php
         add_action('wp_ajax_calculate_gold_value', array($this, 'calculate_gold_value'));
         add_action('wp_ajax_nopriv_calculate_gold_value', array($this, 'calculate_gold_value'));
         add_action('wp_ajax_test_gold_api', array($this, 'test_gold_api'));
