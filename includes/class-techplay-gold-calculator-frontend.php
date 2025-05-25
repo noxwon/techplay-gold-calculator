@@ -56,6 +56,10 @@ class Techplay_Gold_Calculator_Frontend {
     }
     
     public function render_calculator($atts = array()) {
+        if ( !defined('DONOTCACHEPAGE') ) {
+            define('DONOTCACHEPAGE', true);
+        }
+
         if (!defined('TECHPLAY_GOLD_CALCULATOR_PLUGIN_URL')) {
             return '';
         }
